@@ -16,10 +16,10 @@ export class CreatePostDto {
   productType: string;
 
   @IsString()
-  caption: string;
+  caption: string = '-';
 
   @IsNumber()
-  slideCount: number;
+  slideCount: number = 0;
 
   @ValidateNested()
   @Type(() => PostOwnerDto)
