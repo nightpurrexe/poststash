@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDrizzle } from '@nestjs/drizzle';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { ownersTable, postsTable } from '../db/schema.js';
+import { categoriesTable, ownersTable, postsTable } from '../db/schema.js';
 import { CreatePostDto } from './dto/create-post.dto.js';
 import { eq } from 'drizzle-orm';
+import { UpdatePostCategoryDto } from './dto/update-post-category.dto.js';
 
 @Injectable()
 export class PostsService {
@@ -13,8 +14,28 @@ export class PostsService {
     return this.db.select().from(postsTable);
   }
 
-  updatePostCategory(id: string, payload: any) {
-    return `Update posts category with ${payload} where post ID: ${id}`
+  async updatePostCategory(postId: string, payload: UpdatePostCategoryDto) {
+    const [category] = await this.db
+      .select({ id: categoriesTable.id })
+      .from(categoriesTable)
+      .where(eq(categoriesTable.id, payload.categoryId))
+      .limit(1);
+
+    if (!category) {
+      throw new Error("Could not found category with the given ID")
+    }
+
+    const [updatedPost] = await this.db
+      .update(postsTable)
+      .set({ categoryId: payload.categoryId })
+      .where(eq(postsTable.id, postId))
+      .returning();
+
+    if (!updatedPost) {
+      throw new Error("Post not found");
+    }
+
+    return updatedPost;
   }
 
   async create(payload: CreatePostDto) {
