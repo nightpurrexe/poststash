@@ -1,10 +1,13 @@
 import { useLoaderData, useSearchParams } from 'react-router'
 import type { postsLoader } from './lib/posts-loader'
 import PostCard from './components/PostCard';
+import { useState } from 'react';
+import AddPostModal from './components/AddPostModal';
 
 export default function App() {
   const result = useLoaderData<typeof postsLoader>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const currentPage = result.pagination.page;
   const totalPages = result.pagination.totalPages;
@@ -27,6 +30,11 @@ export default function App() {
 
   return (
     <div className="pb-8 max-w-7xl mx-auto p-4">
+      <header className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Saved Posts</h1>
+        <button onClick={() => setIsModalOpen(true)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add New Post</button>
+      </header>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {result.data.map((post) => (
           <PostCard key={post.id} post={post} />
@@ -44,6 +52,11 @@ export default function App() {
           Next
         </button>
       </div>
+
+      <AddPostModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   )
 }
