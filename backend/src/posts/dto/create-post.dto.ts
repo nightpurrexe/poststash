@@ -1,5 +1,5 @@
 import { IsNumber, IsString, ValidateNested } from 'class-validator'
-import { Type } from 'class-transformer'
+import { Transform, Type } from 'class-transformer'
 import { PostOwnerDto } from './post-owner.dto.js';
 
 export class CreatePostDto {
@@ -16,9 +16,11 @@ export class CreatePostDto {
   productType: string;
 
   @IsString()
-  caption: string = '-';
+  @Transform(({ value }) => value ?? "-")
+  caption: string;
 
   @IsNumber()
+  @Transform(({ value }) => value ?? 0)
   slideCount: number = 0;
 
   @ValidateNested()
