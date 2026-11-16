@@ -1,15 +1,16 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { PostsService } from './posts.service.js';
 import { CreatePostDto } from './dto/create-post.dto.js';
 import { UpdatePostCategoryDto } from './dto/update-post-category.dto.js';
+import { PostFiltersDto } from './dto/post-filter.dto.js';
 
 @Controller('posts')
 export class PostsController {
   constructor(private postsService: PostsService) {}
 
   @Get('/')
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@Query() filters: PostFiltersDto) {
+    return this.postsService.findAll(filters);
   }
 
   @Patch(':id/category')

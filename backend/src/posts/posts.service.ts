@@ -3,15 +3,73 @@ import { InjectDrizzle } from '@nestjs/drizzle';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { categoriesTable, ownersTable, postsTable } from '../db/schema.js';
 import { CreatePostDto } from './dto/create-post.dto.js';
-import { eq } from 'drizzle-orm';
+import { and, asc, count, eq } from 'drizzle-orm';
 import { UpdatePostCategoryDto } from './dto/update-post-category.dto.js';
+import { PostFiltersDto } from './dto/post-filter.dto.js';
 
 @Injectable()
 export class PostsService {
-  constructor(@InjectDrizzle() private db: NodePgDatabase) {}
-  
-  findAll() {
-    return this.db.select().from(postsTable);
+  constructor(@InjectDrizzle() private db: NodePgDatabase) { }
+
+  async findAll(filters: PostFiltersDto) {
+    const pageNumber = filters.page || 1
+    const pageSize = 16;
+    const offset = (pageNumber - 1) * pageSize;
+
+    const conditions = [];
+
+    if (filters.username) {
+      conditions.push(eq(ownersTable.username, filters.username))
+    }
+
+    if (filters.category) {
+      conditions.push(eq(categoriesTable.name, filters.category))
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    const baseSelect = {
+      id: postsTable.id,
+      type: postsTable.type,
+      shortcode: postsTable.shortcode,
+      url: postsTable.url,
+      productType: postsTable.productType,
+      caption: postsTable.caption,
+      slideCount: postsTable.slideCount,
+      ownerId: postsTable.ownerId,
+      categoryId: postsTable.categoryId,
+    };
+
+    const [posts, totalPosts] = await Promise.all([
+      this.db
+        .select(baseSelect)
+        .from(postsTable)
+        .leftJoin(ownersTable, eq(postsTable.ownerId, ownersTable.id))
+        .leftJoin(categoriesTable, eq(postsTable.categoryId, categoriesTable.id))
+        .where(whereClause)
+        .orderBy(asc(postsTable.type), asc(postsTable.id))
+        .limit(pageSize)
+        .offset(offset),
+
+      this.db
+        .select({ count: count() })
+        .from(postsTable)
+        .leftJoin(ownersTable, eq(postsTable.ownerId, ownersTable.id))
+        .leftJoin(categoriesTable, eq(postsTable.categoryId, categoriesTable.id))
+        .where(whereClause),
+    ]);
+
+    const total = totalPosts[0]?.count ?? 0;
+
+    return {
+      data: posts,
+      pagination: {
+        page: pageNumber,
+        limit: pageSize,
+        total,
+        totalPages: Math.ceil(total / pageSize)
+      }
+    }
   }
 
   async updatePostCategory(postId: string, payload: UpdatePostCategoryDto) {
