@@ -6,9 +6,10 @@ type Props = {
 
 export default function PostCard({ post }: Props) {
   const embedUrl = `${post.url}embed/`;
-  
+
   return (
-    <iframe 
+    <iframe
+      className="w-full flex-1 min-h-188 rounded"
       src={embedUrl}
       loading="lazy"
       allowFullScreen
