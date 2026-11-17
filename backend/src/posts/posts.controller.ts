@@ -14,7 +14,7 @@ export class PostsController {
   }
 
   @Get('/uncategorized/count')
-  findAllUncategorizedPosts() {
+  countAllUncategorizedPosts() {
     return this.postsService.countAllUncategorizedPosts();
   }
   
