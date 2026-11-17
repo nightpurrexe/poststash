@@ -13,6 +13,11 @@ export class PostsController {
     return this.postsService.findAll(filters);
   }
 
+  @Get('/uncategorized/count')
+  findAllUncategorizedPosts() {
+    return this.postsService.findAllUncategorizedPosts();
+  }
+  
   @Patch(':id/category')
   updatePostCategory(@Param('id') id: string, @Body() payload: UpdatePostCategoryDto) {
     return this.postsService.updatePostCategory(id, payload)

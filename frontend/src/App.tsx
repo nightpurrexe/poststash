@@ -9,8 +9,13 @@ export default function App() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const currentPage = result.pagination.page;
-  const totalPages = result.pagination.totalPages;
+  const posts = result.posts.data;
+  const pagination = result.posts.pagination;
+  const uncategorizedPostsCount = result.uncategorizedPostsCount;
+
+  const currentPage = pagination.page;
+  const totalPages = pagination.totalPages;
+  const totalPosts = pagination.total;
 
   const applyFilter = (key: "username" | "category", value: string) => {
     setSearchParams((prev) => {
@@ -26,7 +31,7 @@ export default function App() {
       return next;
     })
   }
-  
+
   const goToPage = (page: number) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
@@ -50,18 +55,21 @@ export default function App() {
         <button onClick={() => setIsModalOpen(true)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add New Post</button>
       </header>
 
-      <div className="flex justify-end gap-4 mb-6">
-        <input type="text" className="border rounded px-3 py-1" placeholder="Filter by username" value={searchParams.get("username") ?? ""} onChange={(e) => applyFilter("username", e.target.value)} />
-        <select className="border rounded px-3 py-1" value={searchParams.get("category") ?? ""} onChange={(e) => applyFilter("category", e.target.value)}>
-          <option value="">All</option>
-          <option value="tech">Tech</option>
-          <option value="religion">Religion</option>
-          <option value="work">Work</option>
-        </select>
+      <div className="flex justify-between items-center gap-4 mb-6">
+        <p className="leading-none">{uncategorizedPostsCount} Uncategorized posts</p>
+        <div>
+          <input type="text" className="border rounded px-3 py-1 mr-3" placeholder="Filter by username" value={searchParams.get("username") ?? ""} onChange={(e) => applyFilter("username", e.target.value)} />
+          <select className="border rounded px-3 py-1" value={searchParams.get("category") ?? ""} onChange={(e) => applyFilter("category", e.target.value)}>
+            <option value="">All</option>
+            <option value="tech">Tech</option>
+            <option value="religion">Religion</option>
+            <option value="work">Work</option>
+          </select>
+        </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {result.data.map((post) => (
+        {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
       </div>
@@ -71,7 +79,14 @@ export default function App() {
           Previous
         </button>
 
-        <span className="text-gray-600">Page {currentPage} of {totalPages}</span>
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-sm text-gray-600">
+            Page {currentPage} of {totalPages}
+          </span>
+          <span className="text-xs text-gray-500">
+            {totalPosts} posts found
+          </span>
+        </div>
 
         <button className="px-4 py-2 border rounded disabled:opacity-50" disabled={currentPage >= totalPages} onClick={() => goToPage(currentPage + 1)}>
           Next

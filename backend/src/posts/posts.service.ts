@@ -3,7 +3,7 @@ import { InjectDrizzle } from '@nestjs/drizzle';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { categoriesTable, ownersTable, postsTable } from '../db/schema.js';
 import { CreatePostDto } from './dto/create-post.dto.js';
-import { and, asc, count, eq } from 'drizzle-orm';
+import { and, asc, count, eq, notExists, sql } from 'drizzle-orm';
 import { UpdatePostCategoryDto } from './dto/update-post-category.dto.js';
 import { PostFiltersDto } from './dto/post-filter.dto.js';
 
@@ -70,6 +70,24 @@ export class PostsService {
         totalPages: Math.ceil(total / pageSize)
       }
     }
+  }
+
+  async findAllUncategorizedPosts() {
+    const [uncategorizedPosts] = await this.db
+      .select({
+        totalUncategorizedPosts: count()
+      })
+      .from(postsTable)
+      .where(
+        notExists(
+          this.db
+            .select({ id: sql`1` })
+            .from(categoriesTable)
+            .where(eq(categoriesTable.id, postsTable.categoryId))
+        )
+      )
+
+    return uncategorizedPosts.totalUncategorizedPosts;
   }
 
   async updatePostCategory(postId: string, payload: UpdatePostCategoryDto) {
