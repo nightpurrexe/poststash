@@ -72,7 +72,7 @@ export class PostsService {
     }
   }
 
-  async findAllUncategorizedPosts() {
+  async countAllUncategorizedPosts() {
     const [uncategorizedPosts] = await this.db
       .select({
         totalUncategorizedPosts: count()
