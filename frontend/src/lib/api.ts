@@ -24,8 +24,8 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
 
 export const api = {
   posts: {
-    create: (data: CreatePostRequest) => request("/api/v1/posts", { method: "POST", body: JSON.stringify(data) })
-    // updateCategory: (id: string, categoryId: string) => request(`api/v1/posts/${id}/category`, { method: "PATCH", body: JSON.stringify() })
+    create: (data: CreatePostRequest) => request("/api/v1/posts", { method: "POST", body: JSON.stringify(data) }),
+    updateCategory: (id: string, categoryId: string) => request(`/api/v1/posts/${id}/category`, { method: "PATCH", body: JSON.stringify({ categoryId }) })
   },
   categories: {
     getAll: () => request("/api/v1/categories"),

@@ -12,6 +12,21 @@ export default function App() {
   const currentPage = result.pagination.page;
   const totalPages = result.pagination.totalPages;
 
+  const applyFilter = (key: "username" | "category", value: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+
+      if (value) {
+        next.set(key, value)
+      } else {
+        next.delete(key)
+      }
+
+      next.delete("page")
+      return next;
+    })
+  }
+  
   const goToPage = (page: number) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
@@ -34,6 +49,16 @@ export default function App() {
         <h1 className="text-3xl font-bold">Saved Posts</h1>
         <button onClick={() => setIsModalOpen(true)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add New Post</button>
       </header>
+
+      <div className="flex justify-end gap-4 mb-6">
+        <input type="text" className="border rounded px-3 py-1" placeholder="Filter by username" value={searchParams.get("username") ?? ""} onChange={(e) => applyFilter("username", e.target.value)} />
+        <select className="border rounded px-3 py-1" value={searchParams.get("category") ?? ""} onChange={(e) => applyFilter("category", e.target.value)}>
+          <option value="">All</option>
+          <option value="tech">Tech</option>
+          <option value="religion">Religion</option>
+          <option value="work">Work</option>
+        </select>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {result.data.map((post) => (
