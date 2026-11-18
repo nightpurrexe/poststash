@@ -17,7 +17,11 @@ export default function App() {
   const totalPages = pagination.totalPages;
   const totalPosts = pagination.total;
 
-  const applyFilter = (key: "username" | "category", value: string) => {
+  const selectedCategory = searchParams.get("uncategorized") === "true"
+    ? "uncategorized"
+    : searchParams.get("category") ?? "";
+
+  const applyFilter = (key: "username" | "category" | "uncategorized", value: string) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
 
@@ -25,6 +29,14 @@ export default function App() {
         next.set(key, value)
       } else {
         next.delete(key)
+      }
+
+      if (key === "uncategorized" && value) {
+        next.delete("category")
+      }
+
+      if (key === "category" && value) {
+        next.delete("uncategorized")
       }
 
       next.delete("page")
@@ -48,6 +60,25 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
+  const handleCategoryChange = (value: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+
+      next.delete("category")
+      next.delete("uncategorized")
+
+      if (value === "uncategorized") {
+        next.set("uncategorized", "true")
+      } else if (value) {
+        next.set("category", value)
+      }
+
+      next.delete("page")
+
+      return next
+    })
+  }
+
   return (
     <div className="pb-8 max-w-7xl mx-auto p-4">
       <header className="flex justify-between items-center mb-6">
@@ -59,11 +90,12 @@ export default function App() {
         <p className="leading-none">{uncategorizedPostsCount} Uncategorized posts</p>
         <div>
           <input type="text" className="border rounded px-3 py-1 mr-3" placeholder="Filter by username" value={searchParams.get("username") ?? ""} onChange={(e) => applyFilter("username", e.target.value)} />
-          <select className="border rounded px-3 py-1" value={searchParams.get("category") ?? ""} onChange={(e) => applyFilter("category", e.target.value)}>
+          <select className="border rounded px-3 py-1" value={selectedCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
             <option value="">All</option>
             <option value="tech">Tech</option>
             <option value="religion">Religion</option>
             <option value="work">Work</option>
+            <option value="uncategorized">Uncategorized</option>
           </select>
         </div>
       </div>

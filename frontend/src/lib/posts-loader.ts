@@ -6,7 +6,7 @@ export async function postsLoader({ request }: LoaderFunctionArgs) {
   const postsApiUrl = new URL("/api/v1/posts", API_BASE);
   const uncategorizedPostsApiUrl = new URL("/api/v1/posts/uncategorized/count", API_BASE)
   
-  const allowedParams = ["page", "username", "category"]
+  const allowedParams = ["page", "username", "category", "uncategorized"]
 
   for (const key of allowedParams) {
     const value = url.searchParams.get(key)

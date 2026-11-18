@@ -1,5 +1,5 @@
-import { Type } from "class-transformer";
-import { IsInt, IsOptional, IsString, Min } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsBoolean, IsInt, IsOptional, IsString, Min } from "class-validator";
 
 export class PostFiltersDto {
   @IsString()
@@ -9,6 +9,11 @@ export class PostFiltersDto {
   @IsString()
   @IsOptional()
   category?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  uncategorized?: boolean;
 
   @IsInt()
   @IsOptional()

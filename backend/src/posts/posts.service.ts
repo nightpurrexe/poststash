@@ -3,7 +3,7 @@ import { InjectDrizzle } from '@nestjs/drizzle';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { categoriesTable, ownersTable, postsTable } from '../db/schema.js';
 import { CreatePostDto } from './dto/create-post.dto.js';
-import { and, asc, count, eq, notExists, sql } from 'drizzle-orm';
+import { and, asc, count, eq, isNull, notExists, sql } from 'drizzle-orm';
 import { UpdatePostCategoryDto } from './dto/update-post-category.dto.js';
 import { PostFiltersDto } from './dto/post-filter.dto.js';
 
@@ -22,11 +22,14 @@ export class PostsService {
       conditions.push(eq(ownersTable.username, filters.username))
     }
 
-    if (filters.category) {
-      conditions.push(eq(categoriesTable.name, filters.category))
+    if (filters.uncategorized) { 
+      conditions.push(isNull(postsTable.categoryId)); 
+    } else if (filters.category) { 
+      conditions.push(eq(categoriesTable.name, filters.category)) 
     }
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+    console.log(conditions)
 
     const baseSelect = {
       id: postsTable.id,
