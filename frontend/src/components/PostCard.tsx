@@ -29,7 +29,6 @@ export default function PostCard({ post }: Props) {
       revalidator.revalidate()
     } catch (e) {
       setError("Could not save category")
-      console.log(e)
     } finally {
       setSaving(false)
     }

@@ -29,7 +29,6 @@ export class PostsService {
     }
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
-    console.log(conditions)
 
     const baseSelect = {
       id: postsTable.id,
