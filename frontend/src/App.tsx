@@ -1,4 +1,4 @@
-import { useLoaderData, useSearchParams } from "react-router";
+import { useLoaderData, useRevalidator, useSearchParams } from "react-router";
 import type { postsLoader } from "./lib/posts-loader";
 import PostCard from "./components/PostCard";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import { capitalize } from "./utils/capitalize";
 
 export default function App() {
   const result = useLoaderData<typeof postsLoader>();
+  const revalidator = useRevalidator();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isAddNewPostModalOpen, setIsAddNewPostModalOpen] = useState(false);
   const [isAddNewCategoryModalOpen, setIsAddNewCategoryModalOpen] = useState(false);
@@ -190,6 +191,7 @@ export default function App() {
       <AddPostModal
         isOpen={isAddNewPostModalOpen}
         onClose={() => setIsAddNewPostModalOpen(false)}
+        onCreated={() => revalidator.revalidate()}
       />
 
       <AddCategoryModal

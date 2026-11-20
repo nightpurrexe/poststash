@@ -2,9 +2,13 @@ import { useState } from "react";
 import { api } from "../lib/api";
 import type { PostLensMetadata } from "../types";
 
-type Props = { isOpen: boolean; onClose: () => void };
+type Props = {
+  isOpen: boolean;
+  onClose: () => void;
+  onCreated: () => void;
+};
 
-export default function AddPostModal({ isOpen, onClose }: Props) {
+export default function AddPostModal({ isOpen, onClose, onCreated }: Props) {
   const [jsonInput, setJsonInput] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -38,6 +42,7 @@ export default function AddPostModal({ isOpen, onClose }: Props) {
       await api.posts.create(payload);
       setJsonInput("");
       onClose();
+      onCreated();
     } catch (err) {
       setFormError(err instanceof Error ? err.message : "Invalid JSON format");
     } finally {
