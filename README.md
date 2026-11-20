@@ -74,7 +74,96 @@ The workflow is simple:
 
 ## Getting Started
 
-Getting started documentation is currently a work in progress.
+### Prerequisites
+
+Make sure you have the following installed on your machine:
+
+- [Node.js](https://nodejs.org/)
+- [pnpm](https://pnpm.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/nightpurrexe/poststash.git
+cd poststash
+```
+
+Install backend dependencies:
+
+```bash
+cd backend
+pnpm install
+```
+
+Install frontend dependencies:
+
+```bash
+cd ../frontend
+pnpm install
+```
+
+### Environment Configuration
+
+Create a `.env` file in both the `backend` and `frontend` directories.
+
+**Backend (`backend/.env`):**
+
+Configure your PostgreSQL connection:
+
+```env
+DATABASE_URL=postgresql://postgres:password@localhost:5432/my_database
+```
+
+Replace the connection details with your local PostgreSQL credentials and database name.
+
+**Frontend (`frontend/.env`):**
+
+Configure the backend API URL:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+Make sure the API URL matches the address where your backend server is running.
+
+### Database Setup
+
+Make sure your local PostgreSQL server is running.
+
+Create a PostgreSQL database for the application, then navigate to the backend directory:
+
+```bash
+cd backend
+```
+
+Synchronize the database schema using Drizzle Kit:
+
+```bash
+pnpm db:push
+```
+
+This command synchronizes your PostgreSQL database structure with the application's Drizzle schema.
+
+### Running the Application
+
+Start the backend development server:
+
+```bash
+cd backend
+pnpm start:dev
+```
+
+In a separate terminal, start the frontend development server:
+
+```bash
+cd frontend
+pnpm dev
+```
+
+The backend and frontend should now be running locally.
 
 ## Limitations
 
