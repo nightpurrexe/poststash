@@ -37,8 +37,8 @@ export default function AddPostModal({ isOpen, onClose }: Props) {
       await api.posts.create(payload);
       setJsonInput("");
       onClose();
-    } catch (e) {
-      setFormError(e instanceof Error ? e.message : "Invalid JSON format")
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : "Invalid JSON format")
     } finally {
       setIsSaving(false)
     }
