@@ -1,14 +1,16 @@
 import { useState } from "react";
-import type { Post } from "../types";
-import { useCategories } from "../hooks/useCategories";
+import type { Category, Post } from "../types";
 import { useRevalidator } from "react-router";
 import { api } from "../lib/api";
 
 type Props = {
   post: Post;
+  categories: Category[];
+  categoriesLoading: boolean;
+  categoriesError: string | null;
 }
 
-export default function PostCard({ post }: Props) {
+export default function PostCard({ post, categories, categoriesLoading, categoriesError }: Props) {
   const embedUrl = `${post.url}embed/`;
   const [isEditing, setIsEditing] = useState(false)
   const [selectedCategoryId, setSelectedCategoryId] = useState(post.categoryId)
@@ -16,7 +18,6 @@ export default function PostCard({ post }: Props) {
   const [error, setError] = useState<string | null>(null)
 
 
-  const { categories, loading: categoriesLoading, error: categoriesError } = useCategories(isEditing)
   const revalidator = useRevalidator();
 
   const handleSave = async () => {

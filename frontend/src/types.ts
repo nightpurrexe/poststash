@@ -22,3 +22,12 @@ export interface Post {
   ownerId: string;
   categoryId: string;
 }
+
+export interface CreateCategoryRequest {
+  name: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+}

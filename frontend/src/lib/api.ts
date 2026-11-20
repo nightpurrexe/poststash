@@ -1,4 +1,4 @@
-import type { CreatePostRequest } from "../types";
+import type { Category, CreateCategoryRequest, CreatePostRequest } from "../types";
 import { API_BASE } from "./config";
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
@@ -28,6 +28,7 @@ export const api = {
     updateCategory: (id: string, categoryId: string) => request(`/api/v1/posts/${id}/category`, { method: "PATCH", body: JSON.stringify({ categoryId }) })
   },
   categories: {
-    getAll: () => request("/api/v1/categories"),
+    getAll: () => request<Category[]>("/api/v1/categories"),
+    create: (data: CreateCategoryRequest) => request<Category[]>("/api/v1/categories", { method: "POST", body: JSON.stringify(data) })
   }
 }
