@@ -28,7 +28,7 @@ export default function PostCard({ post, categories, categoriesLoading, categori
       await api.posts.updateCategory(post.id, selectedCategoryId)
       setIsEditing(false)
       revalidator.revalidate()
-    } catch (e) {
+    } catch {
       setError("Could not save category")
     } finally {
       setSaving(false)
