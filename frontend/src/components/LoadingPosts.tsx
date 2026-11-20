@@ -1,3 +1,3 @@
 export default function LoadingPosts() {
-  return <p>Fetching posts...</p>
+  return <p>Fetching posts...</p>;
 }

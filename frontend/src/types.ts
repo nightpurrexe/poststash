@@ -3,13 +3,13 @@ export interface CreatePostRequest {
   shortcode: string;
   url: string;
   productType: string;
-  caption: string | '-';
+  caption: string | "-";
   slideCount: number | 0;
   owner: {
     username: string;
-    fullName: string | null
+    fullName: string | null;
   };
-};
+}
 
 export interface Post {
   id: string;

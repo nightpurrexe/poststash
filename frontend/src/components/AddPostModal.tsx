@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { api } from "../lib/api";
 
-type Props = { isOpen: boolean, onClose: () => void };
+type Props = { isOpen: boolean; onClose: () => void };
 
 export default function AddPostModal({ isOpen, onClose }: Props) {
   const [jsonInput, setJsonInput] = useState("");
@@ -38,15 +38,21 @@ export default function AddPostModal({ isOpen, onClose }: Props) {
       setJsonInput("");
       onClose();
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Invalid JSON format")
+      setFormError(err instanceof Error ? err.message : "Invalid JSON format");
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         <form onSubmit={handleSubmit}>
           <h2 className="text-xl font-bold mb-2">Add New Post</h2>
           <p className="text-sm text-gray-600 mb-4">
@@ -67,11 +73,23 @@ export default function AddPostModal({ isOpen, onClose }: Props) {
           )}
 
           <div className="flex justify-end gap-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancel</button>
-            <button type="submit" disabled={isSaving} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50">{isSaving ? "Saving..." : "Save"}</button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+            >
+              {isSaving ? "Saving..." : "Save"}
+            </button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }
