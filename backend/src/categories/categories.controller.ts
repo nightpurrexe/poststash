@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { CategoriesService } from './categories.service.js';
-import { CreateCategoryDto } from './dto/create-category.dto.js';
+import { Body, Controller, Get, Post } from "@nestjs/common";
+import { CategoriesService } from "./categories.service.js";
+import { CreateCategoryDto } from "./dto/create-category.dto.js";
 
-@Controller('categories')
+@Controller("categories")
 export class CategoriesController {
   constructor(private categoriesService: CategoriesService) {}
 
@@ -13,6 +13,6 @@ export class CategoriesController {
 
   @Post()
   create(@Body() payload: CreateCategoryDto) {
-    return this.categoriesService.create(payload)
+    return this.categoriesService.create(payload);
   }
 }

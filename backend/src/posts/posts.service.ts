@@ -1,31 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import { InjectDrizzle } from '@nestjs/drizzle';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { categoriesTable, ownersTable, postsTable } from '../db/schema.js';
-import { CreatePostDto } from './dto/create-post.dto.js';
-import { and, asc, count, eq, isNull, notExists, sql } from 'drizzle-orm';
-import { UpdatePostCategoryDto } from './dto/update-post-category.dto.js';
-import { PostFiltersDto } from './dto/post-filter.dto.js';
+import { Injectable } from "@nestjs/common";
+import { InjectDrizzle } from "@nestjs/drizzle";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { categoriesTable, ownersTable, postsTable } from "../db/schema.js";
+import { CreatePostDto } from "./dto/create-post.dto.js";
+import { and, asc, count, eq, isNull, notExists, sql } from "drizzle-orm";
+import { UpdatePostCategoryDto } from "./dto/update-post-category.dto.js";
+import { PostFiltersDto } from "./dto/post-filter.dto.js";
 
 @Injectable()
 export class PostsService {
-  constructor(@InjectDrizzle() private db: NodePgDatabase) { }
+  constructor(@InjectDrizzle() private db: NodePgDatabase) {}
 
   async findAll(filters: PostFiltersDto) {
-    const pageNumber = filters.page || 1
+    const pageNumber = filters.page || 1;
     const pageSize = 16;
     const offset = (pageNumber - 1) * pageSize;
 
     const conditions = [];
 
     if (filters.username) {
-      conditions.push(eq(ownersTable.username, filters.username))
+      conditions.push(eq(ownersTable.username, filters.username));
     }
 
-    if (filters.uncategorized) { 
-      conditions.push(isNull(postsTable.categoryId)); 
-    } else if (filters.category) { 
-      conditions.push(eq(categoriesTable.name, filters.category)) 
+    if (filters.uncategorized) {
+      conditions.push(isNull(postsTable.categoryId));
+    } else if (filters.category) {
+      conditions.push(eq(categoriesTable.name, filters.category));
     }
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
@@ -47,7 +47,10 @@ export class PostsService {
         .select(baseSelect)
         .from(postsTable)
         .leftJoin(ownersTable, eq(postsTable.ownerId, ownersTable.id))
-        .leftJoin(categoriesTable, eq(postsTable.categoryId, categoriesTable.id))
+        .leftJoin(
+          categoriesTable,
+          eq(postsTable.categoryId, categoriesTable.id),
+        )
         .where(whereClause)
         .orderBy(asc(postsTable.type), asc(postsTable.id))
         .limit(pageSize)
@@ -57,7 +60,10 @@ export class PostsService {
         .select({ count: count() })
         .from(postsTable)
         .leftJoin(ownersTable, eq(postsTable.ownerId, ownersTable.id))
-        .leftJoin(categoriesTable, eq(postsTable.categoryId, categoriesTable.id))
+        .leftJoin(
+          categoriesTable,
+          eq(postsTable.categoryId, categoriesTable.id),
+        )
         .where(whereClause),
     ]);
 
@@ -69,15 +75,15 @@ export class PostsService {
         page: pageNumber,
         limit: pageSize,
         total,
-        totalPages: Math.ceil(total / pageSize)
-      }
-    }
+        totalPages: Math.ceil(total / pageSize),
+      },
+    };
   }
 
   async countAllUncategorizedPosts() {
     const [uncategorizedPosts] = await this.db
       .select({
-        totalUncategorizedPosts: count()
+        totalUncategorizedPosts: count(),
       })
       .from(postsTable)
       .where(
@@ -85,9 +91,9 @@ export class PostsService {
           this.db
             .select({ id: sql`1` })
             .from(categoriesTable)
-            .where(eq(categoriesTable.id, postsTable.categoryId))
-        )
-      )
+            .where(eq(categoriesTable.id, postsTable.categoryId)),
+        ),
+      );
 
     return uncategorizedPosts.totalUncategorizedPosts;
   }
@@ -100,7 +106,7 @@ export class PostsService {
       .limit(1);
 
     if (!category) {
-      throw new Error("Could not found category with the given ID")
+      throw new Error("Could not found category with the given ID");
     }
 
     const [updatedPost] = await this.db

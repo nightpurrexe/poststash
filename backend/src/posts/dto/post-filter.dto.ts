@@ -12,7 +12,7 @@ export class PostFiltersDto {
 
   @IsBoolean()
   @IsOptional()
-  @Transform(({ value }) => value === 'true')
+  @Transform(({ value }) => value === "true")
   uncategorized?: boolean;
 
   @IsInt()
@@ -20,4 +20,4 @@ export class PostFiltersDto {
   @Type(() => Number)
   @Min(1)
   page?: number;
-};
+}

@@ -1,6 +1,6 @@
-import { IsNumber, IsString, ValidateNested } from 'class-validator'
-import { Transform, Type } from 'class-transformer'
-import { PostOwnerDto } from './post-owner.dto.js';
+import { IsNumber, IsString, ValidateNested } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { PostOwnerDto } from "./post-owner.dto.js";
 
 export class CreatePostDto {
   @IsString()
