@@ -6,6 +6,7 @@ import AddPostModal from "./components/AddPostModal";
 import AddCategoryModal from "./components/AddCategoryModal";
 import { api } from "./lib/api";
 import type { Category } from "./types";
+import { capitalize } from "./utils/capitalize";
 
 export default function App() {
   const result = useLoaderData<typeof postsLoader>();
@@ -130,7 +131,7 @@ export default function App() {
             <option value="">All</option>
             {categories.map((category) => (
               <option key={category.id} value={category.name}>
-                {category.name}
+                {capitalize(category.name)}
               </option>
             ))}
             <option value="uncategorized">Uncategorized</option>

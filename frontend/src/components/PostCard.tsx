@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Category, Post } from "../types";
 import { useRevalidator } from "react-router";
 import { api } from "../lib/api";
+import { capitalize } from "../utils/capitalize";
 
 type Props = {
   post: Post;
@@ -23,7 +24,7 @@ export default function PostCard({
   const [error, setError] = useState<string | null>(null);
 
   const revalidator = useRevalidator();
-
+  
   const handleSave = async () => {
     if (!selectedCategoryId) return setError("Please select a category");
     setSaving(true);
@@ -65,7 +66,7 @@ export default function PostCard({
                 <option value="">Select category</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.name}
+                    {capitalize(c.name)}
                   </option>
                 ))}
               </select>
