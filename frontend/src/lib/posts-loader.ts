@@ -1,7 +1,15 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { API_BASE } from "./config";
+import type { PostsResponse } from "../types";
 
-export async function postsLoader({ request }: LoaderFunctionArgs) {
+interface PostsLoaderData {
+  posts: PostsResponse;
+  uncategorizedPostsCount: number;
+}
+
+export async function postsLoader({
+  request,
+}: LoaderFunctionArgs): Promise<PostsLoaderData> {
   const url = new URL(request.url);
   const postsApiUrl = new URL("/api/v1/posts", API_BASE);
   const uncategorizedPostsApiUrl = new URL(
@@ -23,19 +31,19 @@ export async function postsLoader({ request }: LoaderFunctionArgs) {
   }
 
   const [postsRes, uncategorizedPostsRes] = await Promise.all([
-    fetch(postsApiUrl.toString()),
-    fetch(uncategorizedPostsApiUrl.toString()),
+    fetch(postsApiUrl.toString(), { signal: request.signal }),
+    fetch(uncategorizedPostsApiUrl.toString(), { signal: request.signal }),
   ]);
 
-  if (!postsRes.ok || !uncategorizedPostsRes) {
+  if (!postsRes.ok || !uncategorizedPostsRes.ok) {
     throw new Response("Failed to fetch posts", {
       status: !postsRes.ok ? postsRes.status : uncategorizedPostsRes.status,
     });
   }
 
   const [posts, uncategorizedPostsCount] = await Promise.all([
-    postsRes.json(),
-    uncategorizedPostsRes.json(),
+    postsRes.json() as Promise<PostsResponse>,
+    uncategorizedPostsRes.json() as Promise<number>,
   ]);
 
   return {

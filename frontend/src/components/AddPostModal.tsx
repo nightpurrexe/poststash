@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../lib/api";
+import type { PostLensMetadata } from "../types";
 
 type Props = { isOpen: boolean; onClose: () => void };
 
@@ -16,7 +17,7 @@ export default function AddPostModal({ isOpen, onClose }: Props) {
     setIsSaving(true);
 
     try {
-      const parsed = JSON.parse(jsonInput);
+      const parsed: PostLensMetadata = JSON.parse(jsonInput);
       if (!parsed?.post) throw new Error("JSON must contain a 'post' object.");
 
       const payload = {

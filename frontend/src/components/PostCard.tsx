@@ -18,7 +18,7 @@ export default function PostCard({
 }: Props) {
   const embedUrl = `${post.url}embed/`;
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(post.categoryId);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(post.categoryId);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,7 +59,7 @@ export default function PostCard({
             <div className="flex gap-2 items-center">
               <select
                 className="flex-1 border rounded p-1 text-sm"
-                value={selectedCategoryId}
+                value={selectedCategoryId ?? ""}
                 onChange={(e) => setSelectedCategoryId(e.target.value)}
               >
                 <option value="">Select category</option>

@@ -2,6 +2,7 @@ import type {
   Category,
   CreateCategoryRequest,
   CreatePostRequest,
+  Post,
 } from "../types";
 import { API_BASE } from "./config";
 
@@ -23,15 +24,18 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
     );
   }
 
-  return res.json();
+  return (await res.json()) as T;
 }
 
 export const api = {
   posts: {
     create: (data: CreatePostRequest) =>
-      request("/api/v1/posts", { method: "POST", body: JSON.stringify(data) }),
+      request<Post>("/api/v1/posts", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
     updateCategory: (id: string, categoryId: string) =>
-      request(`/api/v1/posts/${id}/category`, {
+      request<Post>(`/api/v1/posts/${id}/category`, {
         method: "PATCH",
         body: JSON.stringify({ categoryId }),
       }),
