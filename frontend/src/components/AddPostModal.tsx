@@ -48,7 +48,7 @@ export default function AddPostModal({ isOpen, onClose }: Props) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
         <form onSubmit={handleSubmit}>
-          <h2 className="text-xl font-bold mb-2"></h2>
+          <h2 className="text-xl font-bold mb-2">Add New Post</h2>
           <p className="text-sm text-gray-600 mb-4">
             Paste the metadata for the Instagram post you want to keep below.
           </p>
