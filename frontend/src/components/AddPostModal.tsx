@@ -52,46 +52,57 @@ export default function AddPostModal({ isOpen, onClose, onCreated }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#252923]/50 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        className="relative w-full max-w-lg rounded-2xl border border-[#E5E3DC] bg-white p-6 shadow-2xl sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit}>
-          <h2 className="text-xl font-bold mb-2">Add New Post</h2>
-          <p className="text-sm text-gray-600 mb-4">
-            Paste the metadata for the Instagram post you want to keep below.
-          </p>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold tracking-tight text-[#252923]">
+              Add New Post
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-[#777970]">
+              Paste the metadata for the Instagram post you want to keep below.
+            </p>
+          </div>
+
+          <label className="mb-2 block text-sm font-semibold text-[#252923]">
+            Post metadata (JSON)
+          </label>
 
           <textarea
             value={jsonInput}
             onChange={(e) => setJsonInput(e.target.value)}
             spellCheck="false"
-            className="w-full h-48 p-2 border rounded mb-2 font-mono text-sm"
+            className="mb-3 h-52 w-full resize-y rounded-xl border border-[#E5E3DC] bg-[#F8F7F4] p-4 font-mono text-xs leading-relaxed text-[#252923] outline-none transition placeholder:text-[#A3A39B] focus:border-[#347A57] focus:ring-2 focus:ring-[#347A57]/15"
             placeholder='{"post": {"url": "...", "type": "...", ...}}'
             required
           />
 
           {formError && (
-            <p className="text-red-600 text-sm mb-4">{formError}</p>
+            <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              {formError}
+            </p>
           )}
 
-          <div className="flex justify-end gap-2">
+          <div className="flex flex-col-reverse justify-end gap-2 pt-2 sm:flex-row">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+              className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#777970] transition-colors hover:bg-[#F8F7F4] hover:text-[#252923]"
             >
               Cancel
             </button>
+
             <button
               type="submit"
               disabled={isSaving}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              className="rounded-xl bg-[#347A57] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#286344] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isSaving ? "Saving..." : "Save"}
+              {isSaving ? "Saving..." : "Save Post"}
             </button>
           </div>
         </form>

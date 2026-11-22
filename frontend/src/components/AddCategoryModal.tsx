@@ -44,46 +44,57 @@ export default function AddCategoryModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#252923]/50 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        className="relative w-full max-w-md rounded-2xl border border-[#E5E3DC] bg-white p-6 shadow-2xl sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit}>
-          <h2 className="text-xl font-bold mb-2">Add New Category</h2>
-          <p className="text-sm text-gray-600 mb-4">
-            Create a new category to organize your posts.
-          </p>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold tracking-tight text-[#252923]">
+              Add New Category
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-[#777970]">
+              Create a category to keep your saved posts organized.
+            </p>
+          </div>
+
+          <label className="mb-2 block text-sm font-semibold text-[#252923]">
+            Category name
+          </label>
 
           <input
             type="text"
             value={categoryInput}
             onChange={(e) => setCategoryInput(e.target.value)}
-            className="w-full p-2 border rounded mb-2 font-mono text-sm"
-            placeholder="Sports"
+            className="mb-3 w-full rounded-xl border border-[#E5E3DC] bg-[#F8F7F4] px-4 py-3 text-sm text-[#252923] outline-none transition placeholder:text-[#A3A39B] focus:border-[#347A57] focus:ring-2 focus:ring-[#347A57]/15"
+            placeholder="e.g. Sports"
             required
           />
 
           {formError && (
-            <p className="text-red-600 text-sm mb-4">{formError}</p>
+            <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              {formError}
+            </p>
           )}
 
-          <div className="flex justify-end gap-2">
+          <div className="flex flex-col-reverse justify-end gap-2 pt-2 sm:flex-row">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+              className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#777970] transition-colors hover:bg-[#F8F7F4] hover:text-[#252923]"
             >
               Cancel
             </button>
+
             <button
               type="submit"
               disabled={isSaving}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              className="rounded-xl bg-[#347A57] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#286344] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isSaving ? "Saving..." : "Save"}
+              {isSaving ? "Saving..." : "Save Category"}
             </button>
           </div>
         </form>
